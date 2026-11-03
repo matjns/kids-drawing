@@ -1,6 +1,6 @@
 """Nature: trees, weather, and a snowman."""
 
-from shapes import THIN, W, arc, circ, curve, ell, ink, leaf, lines, ln, pg, rr, smile, step, subject, dot_eyes
+from shapes import THIN, W, arc, circ, cloud_outline, curve, ell, ink, leaf, lines, ln, pg, rr, smile, step, subject, dot_eyes
 
 
 def all_subjects() -> list[dict]:
@@ -27,18 +27,19 @@ def tree() -> dict:
         [
             step(
                 "Draw the trunk. A tall trapezoid, wider at the bottom.",
-                ink(pg([(88, 110), (112, 110), (122, 182), (78, 182)], close=True)),
+                ink(pg([(90, 118), (110, 118), (120, 178), (80, 178)], close=True)),
             ),
             step(
-                "Add three overlapping circles for the leafy top.",
-                ink(circ(70, 96, 28)),
-                ink(circ(110, 78, 34)),
-                ink(circ(142, 100, 26)),
+                "Add one bumpy shape for the leaves. It sits on the trunk.",
+                ink(cloud_outline(100, 86, 120, 78)),
             ),
             step(
-                "Draw a small knot on the trunk and a few grass lines.",
-                ink(ell(100, 142, 6, 8), width=THIN),
-                lines([(70, 182, 62, 192), (100, 184, 100, 194), (132, 182, 144, 192)], width=THIN),
+                "Draw a small knot on the trunk.",
+                ink(ell(100, 146, 6, 8), width=THIN),
+            ),
+            step(
+                "Add two short grass lines beside the trunk.",
+                lines([(78, 178, 68, 188), (122, 178, 132, 188)], width=THIN),
             ),
         ],
     )
@@ -116,19 +117,20 @@ def cloud() -> dict:
         ["cloud", "clouds"],
         [
             step(
-                "Draw three overlapping circles. Together they make a cloud.",
-                ink(circ(78, 112, 28)),
-                ink(circ(116, 96, 34)),
-                ink(circ(148, 114, 24)),
+                "Draw one cloud outline: three bumps on top and a smooth bottom.",
+                ink(cloud_outline(100, 104, 140, 80)),
             ),
             step(
-                "Add a flat bottom line so the cloud can sit in the sky.",
-                ink(arc(112, 118, 62, 22, 20, 160), width=W),
+                "Add two eyes.",
+                dot_eyes(100, 108, gap=22, r=3),
             ),
             step(
-                "Draw a friendly face.",
-                dot_eyes(112, 108, gap=22, r=3),
-                smile(112, 122, 20, 8),
+                "Draw a smile.",
+                smile(100, 122, 22, 8),
+            ),
+            step(
+                "Add a short shine curve on the left bump.",
+                ink(curve(62, 96, 70, 84, 82, 90), width=THIN),
             ),
         ],
     )
@@ -146,10 +148,8 @@ def rainbow() -> dict:
             step("Draw a third, smaller arch.", ink(arc(100, 150, 42, 38, 180, 360), width=W)),
             step(
                 "Add a small cloud at each end.",
-                ink(circ(28, 150, 14), width=THIN),
-                ink(circ(18, 160, 10), width=THIN),
-                ink(circ(172, 150, 14), width=THIN),
-                ink(circ(184, 160, 10), width=THIN),
+                ink(circ(26, 156, 14)),
+                ink(circ(174, 156, 14)),
             ),
         ],
     )
@@ -279,10 +279,8 @@ def rain() -> dict:
         ["rain", "rainy", "raining"],
         [
             step(
-                "Draw a cloud from three circles.",
-                ink(circ(78, 64, 24)),
-                ink(circ(112, 52, 28)),
-                ink(circ(144, 66, 22)),
+                "Draw one cloud at the top of the page.",
+                ink(cloud_outline(108, 58, 120, 64)),
             ),
             step(
                 "Add raindrops underneath. Straight lines are easy to copy.",
@@ -295,6 +293,10 @@ def rain() -> dict:
                         (156, 102, 148, 138),
                     ]
                 ),
+            ),
+            step(
+                "Add shorter drops between the long ones.",
+                lines([(72, 112, 66, 136), (96, 114, 92, 140), (120, 112, 116, 138), (144, 110, 140, 132)], width=THIN),
             ),
             step(
                 "Draw a puddle at the bottom.",

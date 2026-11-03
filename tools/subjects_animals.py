@@ -5,6 +5,7 @@ from shapes import (
     W,
     arc,
     circ,
+    cloud_outline,
     curve,
     dot_eyes,
     ell,
@@ -14,6 +15,7 @@ from shapes import (
     leaf,
     lines,
     ln,
+    Path,
     nose,
     pg,
     rr,
@@ -232,37 +234,26 @@ def horse() -> dict:
         "animals",
         ["horse", "horses", "pony", "ponies", "hors"],
         [
-            step("Draw a long oval for the body.", ink(ell(108, 112, 48, 26))),
+            step("Draw a long oval for the body.", ink(ell(104, 122, 42, 22))),
             step(
-                "Add four straight legs. Make the bottom of each leg a tiny hoof line.",
-                lines(
-                    [
-                        (78, 132, 74, 176),
-                        (96, 134, 94, 178),
-                        (128, 134, 132, 178),
-                        (148, 132, 154, 176),
-                    ]
-                ),
-                lines([(68, 176, 82, 176), (88, 178, 102, 178), (124, 178, 140, 178), (146, 176, 162, 176)], width=THIN),
+                "Add four straight legs, and a short hoof line at each foot.",
+                lines([(76, 140, 72, 176), (96, 142, 94, 178), (122, 142, 126, 178), (140, 138, 148, 174)]),
+                lines([(66, 176, 80, 176), (86, 178, 102, 178), (118, 178, 136, 178), (140, 174, 156, 174)], width=THIN),
             ),
             step(
-                "Draw the neck and a long head pointing right.",
-                ink(pg([(136, 96), (158, 62), (176, 66), (168, 84), (150, 108)], close=True)),
-                ink(ell(176, 62, 18, 12)),
-                ink(pg([(186, 52), (198, 40), (190, 58)], close=True)),
+                "Draw a neck that meets the body, then an oval head and one ear.",
+                ink(pg([(126, 108), (150, 74), (164, 64), (156, 86), (136, 120)], close=True)),
+                ink(ell(178, 64, 18, 12)),
+                ink(pg([(168, 56), (164, 34), (184, 52)], close=True)),
             ),
             step(
-                "Add a mane of short curves, an eye, and a tail.",
-                lines(
-                    [
-                        (150, 70, 140, 52),
-                        (146, 82, 134, 66),
-                        (142, 94, 128, 80),
-                    ],
-                    width=THIN,
-                ),
-                ink(circ(180, 60, 2.4), width=2, fill=True),
-                ink(smooth([(64, 100), (40, 108), (28, 136), (40, 156)]), width=W),
+                "Add a short mane above the neck, plus an eye.",
+                lines([(150, 66, 140, 52), (142, 78, 130, 64), (134, 92, 122, 80)], width=THIN),
+                ink(circ(184, 62, 2.4), width=2, fill=True),
+            ),
+            step(
+                "Finish with a curved tail on the left.",
+                ink(smooth([(64, 110), (40, 118), (32, 146), (48, 162)]), width=W),
             ),
         ],
     )
@@ -470,19 +461,21 @@ def elephant() -> dict:
         "animals",
         ["elephant", "elephants", "elefant"],
         [
-            step("Draw a large oval body.", ink(ell(118, 118, 48, 36))),
-            step("Add a round head on the left.", ink(circ(68, 100, 28))),
-            step("Draw a big ear on the head.", ink(ell(42, 108, 24, 30))),
+            step("Draw a large oval body.", ink(ell(122, 118, 40, 30))),
+            step("Add a round head on the left, touching the body.", ink(circ(70, 112, 24))),
             step(
-                "Add a trunk that curls at the end, and one tusk.",
-                ink(smooth([(58, 118), (40, 140), (36, 168), (58, 172)]), width=W),
-                ink(curve(78, 118, 96, 132, 88, 142), width=THIN),
+                "Draw one big ear on top of the head.",
+                ink(ell(62, 82, 16, 20)),
+            ),
+            step(
+                "Add a trunk that starts at the bottom of the head and curls.",
+                ink(smooth([(64, 126), (46, 146), (36, 168), (56, 178)]), width=W),
             ),
             step(
                 "Draw four legs, an eye, and a thin tail.",
-                lines([(92, 146, 88, 182), (112, 148, 110, 184), (136, 148, 140, 184), (156, 144, 162, 178)]),
-                ink(circ(78, 92, 2.8), width=2, fill=True),
-                ink(smooth([(162, 108), (186, 116), (180, 136)]), width=THIN),
+                lines([(96, 144, 92, 180), (114, 146, 112, 182), (136, 146, 140, 182), (154, 142, 160, 176)]),
+                ink(circ(78, 106, 2.6), width=2, fill=True),
+                ink(smooth([(158, 104), (178, 112), (172, 132)]), width=THIN),
             ),
         ],
     )
@@ -655,28 +648,28 @@ def fox() -> dict:
         "animals",
         ["fox", "foxes", "foxy"],
         [
-            step("Draw an oval body.", ink(ell(112, 128, 38, 26))),
+            step("Draw an oval body.", ink(ell(116, 128, 34, 20))),
             step(
-                "Add a round head and a pointy snout.",
-                ink(circ(74, 100, 22)),
-                ink(pg([(58, 96), (28, 108), (58, 116)], close=True)),
+                "Add a head that touches the body, a pointy snout, and two ears.",
+                ink(circ(76, 112, 18)),
+                ink(pg([(62, 108), (36, 116), (64, 122)], close=True)),
+                ink(pg([(64, 98), (58, 66), (80, 94)], close=True)),
+                ink(pg([(84, 96), (98, 62), (96, 100)], close=True)),
             ),
             step(
-                "Draw two triangle ears that do not cross.",
-                ink(pg([(58, 84), (46, 46), (78, 78)], close=True)),
-                ink(pg([(86, 80), (108, 40), (100, 88)], close=True)),
+                "Draw a bushy tail behind the body, with a pointed tip.",
+                ink(ell(164, 110, 22, 13)),
+                ink(pg([(182, 104), (196, 110), (182, 118)], close=True)),
             ),
             step(
-                "Draw a big bushy tail.",
-                ink(ell(164, 112, 28, 16)),
-                ink(pg([(186, 104), (198, 88), (188, 118)], close=True)),
+                "Add four short legs.",
+                lines([(96, 146, 92, 176), (112, 148, 110, 178), (130, 148, 134, 178), (146, 144, 152, 172)]),
             ),
             step(
-                "Add four legs, an eye, a nose, and a smile.",
-                lines([(90, 148, 86, 180), (108, 150, 106, 182), (128, 150, 132, 182), (146, 146, 152, 176)]),
-                ink(circ(66, 96, 2.6), width=2, fill=True),
-                nose(32, 108, 2.4),
-                smile(70, 112, 14, 5),
+                "Finish the face with an eye, a nose, and a smile.",
+                ink(circ(70, 108, 2.4), width=2, fill=True),
+                nose(40, 116, 2.2),
+                smile(72, 118, 12, 4),
             ),
         ],
     )
@@ -689,24 +682,23 @@ def whale() -> dict:
         "animals",
         ["whale", "whales"],
         [
-            step("Draw a very wide oval body.", ink(ell(104, 112, 62, 32))),
+            step("Draw a fat oval body.", ink(ell(112, 120, 48, 28))),
+            step("Add a big rounded head on the right.", ink(rr(140, 96, 46, 48, 14))),
             step(
-                "Add a tail with two flukes on the left.",
-                ink(pg([(46, 112), (16, 86), (28, 112)], close=True)),
-                ink(pg([(46, 112), (16, 140), (30, 116)], close=True)),
+                "Draw a narrow tail and a flat oval fluke.",
+                ink(pg([(66, 110), (32, 114), (32, 128), (66, 124)], close=True)),
+                ink(ell(20, 120, 16, 7)),
             ),
             step(
-                "Draw a top fin and a small bottom fin.",
-                ink(pg([(120, 82), (146, 48), (150, 84)], close=True)),
-                ink(pg([(130, 140), (150, 162), (156, 136)], close=True)),
+                "Add a spout: a short line and a small cloud.",
+                ink(ln(156, 96, 156, 70), width=THIN),
+                ink(cloud_outline(156, 52, 36, 22), width=THIN),
             ),
             step(
-                "Add an eye, a smile, and a curved waterspout.",
-                ink(circ(150, 104, 3), width=2, fill=True),
-                smile(142, 116, 18, 6),
-                ink(curve(96, 82, 78, 48, 64, 36), width=THIN),
-                ink(curve(104, 80, 108, 40, 124, 34), width=THIN),
-                ink(curve(112, 84, 132, 56, 140, 44), width=THIN),
+                "Draw an eye, a smile, and one oval flipper.",
+                ink(circ(168, 114, 2.6), width=2, fill=True),
+                smile(160, 128, 16, 6),
+                ink(ell(118, 146, 14, 7)),
             ),
         ],
     )
@@ -748,30 +740,26 @@ def dinosaur() -> dict:
         "animals",
         ["dinosaur", "dinosaurs", "dino", "t rex", "trex", "t-rex"],
         [
-            step("Draw a big oval body.", ink(ell(118, 118, 36, 28))),
+            step("Draw an oval body.", ink(ell(118, 122, 34, 24))),
             step(
-                "Add a large head on the left and an open smile.",
-                ink(ell(62, 78, 30, 22)),
-                ink(pg([(36, 86), (16, 96), (34, 100)], close=True)),
-                smile(52, 88, 22, 8),
-                ink(circ(48, 70, 3), width=2, fill=True),
+                "Add a big head that touches the body, and a long snout.",
+                ink(ell(68, 90, 26, 20)),
+                ink(pg([(46, 86), (14, 100), (48, 108)], close=True)),
             ),
             step(
-                "Draw a long tail to the right.",
-                ink(smooth([(146, 112), (172, 100), (190, 112), (176, 128)]), width=W),
-                ink(ln(146, 124, 188, 124), width=W),
+                "Draw a tail that gets thinner toward the tip.",
+                ink(pg([(148, 108), (188, 98), (186, 116), (148, 132)], close=True)),
             ),
             step(
-                "Add two strong legs and feet.",
-                ink(pg([(100, 140), (88, 176), (108, 176), (112, 150)], close=True)),
-                ink(pg([(128, 142), (124, 178), (148, 178), (146, 148)], close=True)),
-                ink(ln(82, 176, 112, 176), width=THIN),
-                ink(ln(118, 178, 154, 178), width=THIN),
+                "Add two strong legs with flat feet.",
+                ink(pg([(104, 142), (96, 172), (116, 172), (118, 146)], close=True)),
+                ink(pg([(128, 144), (126, 174), (148, 174), (142, 146)], close=True)),
             ),
             step(
-                "Draw two tiny arms.",
-                ink(smooth([(96, 108), (80, 112), (70, 104)]), width=THIN),
-                ink(smooth([(104, 112), (92, 122), (84, 116)]), width=THIN),
+                "Draw a tiny arm in front of the body, an eye, and a smile.",
+                ink(smooth([(90, 112), (74, 126), (64, 116)]), width=THIN),
+                ink(circ(58, 84, 2.6), width=2, fill=True),
+                smile(62, 98, 16, 6),
             ),
         ],
     )
@@ -785,18 +773,20 @@ def snake() -> dict:
         ["snake", "snakes"],
         [
             step(
-                "Draw a big S for the body. Make the line nice and thick.",
-                ink(smooth([(40, 46), (120, 40), (160, 78), (70, 100), (40, 140), (110, 168), (168, 156)]), width=12),
-            ),
-            step("Add a circle head at the top of the S.", ink(circ(40, 40, 16))),
-            step(
-                "Draw a forked tongue and an eye.",
-                lines([(26, 36, 10, 28), (26, 36, 12, 40)], width=THIN),
-                ink(circ(34, 36, 2.6), width=2, fill=True),
+                "Draw a long S for the body. Keep the two edges the same distance apart.",
+                ink(_snake_body()),
             ),
             step(
-                "Add a smile.",
-                smile(36, 44, 12, 5),
+                "Add a forked tongue at the head.",
+                lines([(36, 56, 18, 46), (36, 56, 20, 64)], width=THIN),
+            ),
+            step(
+                "Draw an eye on the head.",
+                ink(circ(52, 54, 2.4), width=2, fill=True),
+            ),
+            step(
+                "Add a small smile on the head.",
+                smile(56, 62, 10, 4),
             ),
         ],
     )
@@ -876,26 +866,24 @@ def sheep() -> dict:
         "animals",
         ["sheep", "lamb", "lambs"],
         [
-            step("Draw an oval body.", ink(ell(104, 122, 40, 28))),
             step(
-                "Add fluffy circles around the body.",
-                ink(circ(70, 104, 16), width=THIN),
-                ink(circ(100, 90, 16), width=THIN),
-                ink(circ(136, 102, 16), width=THIN),
-                ink(circ(78, 140, 14), width=THIN),
-                ink(circ(132, 140, 14), width=THIN),
+                "Draw one bumpy cloud shape for the wool.",
+                ink(cloud_outline(118, 118, 96, 72)),
             ),
-            step("Draw a head circle on the left.", ink(circ(52, 112, 18))),
+            step("Add a round head that touches the wool.", ink(circ(68, 122, 16))),
             step(
-                "Add ears, eyes, and a nose.",
-                ink(ell(34, 104, 8, 5)),
-                ink(ell(40, 126, 7, 4)),
-                dot_eyes(52, 110, gap=10, r=2.2),
-                nose(40, 116, 2.2),
+                "Draw two small ears on the head.",
+                ink(ell(54, 112, 7, 4)),
+                ink(ell(56, 134, 7, 4)),
             ),
             step(
-                "Draw four short legs.",
-                lines([(82, 148, 78, 178), (100, 150, 98, 180), (118, 150, 120, 180), (136, 146, 142, 176)]),
+                "Add eyes and a nose.",
+                dot_eyes(68, 120, gap=10, r=2.2),
+                nose(56, 128, 2.2),
+            ),
+            step(
+                "Draw four short legs under the wool.",
+                lines([(96, 150, 92, 178), (112, 152, 110, 180), (132, 152, 136, 180), (148, 148, 154, 176)]),
             ),
         ],
     )
@@ -980,29 +968,32 @@ def giraffe() -> dict:
         "animals",
         ["giraffe", "giraffes"],
         [
-            step("Draw a very long neck. A tall rounded rectangle works.", ink(rr(88, 36, 28, 90, 12))),
+            step("Draw an oval body, low on the page.", ink(ell(112, 146, 32, 18))),
             step(
-                "Add a head at the top, two little horns, and an ear.",
-                ink(ell(118, 36, 24, 14)),
-                ink(circ(104, 20, 4), width=THIN),
-                ink(circ(118, 16, 4), width=THIN),
-                ink(ell(142, 34, 7, 4)),
-            ),
-            step("Draw an oval body under the neck.", ink(ell(112, 140, 36, 22))),
-            step(
-                "Add four long legs and a tail.",
-                lines([(90, 158, 86, 190), (106, 160, 104, 192), (124, 160, 128, 192), (140, 156, 148, 188)]),
-                ink(smooth([(146, 136), (170, 146), (176, 132)]), width=THIN),
+                "Add a long neck. A tall rounded rectangle sits on the body.",
+                ink(rr(100, 44, 20, 104, 8)),
             ),
             step(
-                "Decorate with spot circles, an eye, and a smile.",
-                ink(circ(102, 60, 5), width=THIN),
-                ink(circ(108, 82, 4), width=THIN),
-                ink(circ(96, 104, 5), width=THIN),
-                ink(circ(100, 132, 6), width=THIN),
-                ink(circ(126, 146, 5), width=THIN),
-                ink(circ(128, 34, 2.2), width=2, fill=True),
-                smile(124, 40, 12, 4),
+                "Draw the head, two little horns, and one ear.",
+                ink(ell(124, 40, 24, 13)),
+                ink(ln(112, 30, 110, 16), width=THIN),
+                ink(circ(110, 14, 3.2), width=THIN),
+                ink(ln(126, 28, 130, 14), width=THIN),
+                ink(circ(130, 12, 3.2), width=THIN),
+                ink(ell(146, 42, 8, 5)),
+            ),
+            step(
+                "Add four long legs and a short tail.",
+                lines([(96, 162, 92, 186), (110, 164, 108, 188), (126, 164, 130, 188), (140, 160, 146, 184)]),
+                ink(smooth([(142, 140), (164, 148), (170, 136)]), width=THIN),
+            ),
+            step(
+                "Put three spots on the body only, then an eye and a smile.",
+                ink(circ(104, 140, 4), width=THIN),
+                ink(circ(122, 148, 3.5), width=THIN),
+                ink(circ(112, 136, 3), width=THIN),
+                ink(circ(132, 38, 2.2), width=2, fill=True),
+                smile(128, 46, 12, 4),
             ),
         ],
     )
@@ -1040,3 +1031,16 @@ def monkey() -> dict:
             ),
         ],
     )
+
+
+def _snake_body() -> str:
+    p = Path()
+    p.M(36, 50)
+    p.C(90, 28, 168, 36, 166, 96)
+    p.C(164, 140, 100, 150, 130, 172)
+    p.L(116, 184)
+    p.C(78, 164, 146, 152, 148, 96)
+    p.C(150, 52, 80, 46, 36, 64)
+    p.Z()
+    return p.text()
+

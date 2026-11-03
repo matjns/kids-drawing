@@ -129,15 +129,15 @@ def airplane() -> dict:
         "vehicles",
         ["airplane", "airplanes", "plane", "planes", "jet", "aeroplane", "airplaine"],
         [
-            step("Draw the body: a long rounded rectangle.", ink(rr(28, 86, 146, 30, 14))),
+            step("Draw the body: a long rounded rectangle.", ink(rr(36, 90, 128, 26, 12))),
             step(
-                "Add the big wing and a small tail wing.",
-                ink(pg([(78, 100), (118, 156), (148, 156), (124, 108)], close=True)),
-                ink(pg([(146, 100), (176, 128), (186, 120), (160, 100)], close=True)),
+                "Add a triangle wing under the body, and a small tail wing.",
+                ink(pg([(72, 112), (148, 112), (166, 158)], close=True)),
+                ink(pg([(146, 112), (178, 132), (164, 112)], close=True)),
             ),
             step(
-                "Draw the tail fin.",
-                ink(pg([(150, 86), (184, 48), (184, 86)], close=True)),
+                "Draw the tail fin on top of the body.",
+                ink(pg([(146, 90), (176, 50), (176, 90)], close=True)),
             ),
             step(
                 "Add windows and a nose circle.",
@@ -230,9 +230,9 @@ def helicopter() -> dict:
                 ink(pg([(168, 96), (188, 70), (188, 114), (168, 114)], close=True)),
             ),
             step(
-                "Draw the main rotor: a long thin oval and a short line across it.",
-                ink(ell(78, 62, 70, 6)),
-                ink(ln(78, 48, 78, 86), width=THIN),
+                "Draw the rotor, a long thin oval, and a short mast down to the body.",
+                ink(ell(78, 56, 68, 7)),
+                ink(ln(78, 63, 78, 88), width=W),
             ),
             step(
                 "Add the skids, a tail rotor, and a window.",

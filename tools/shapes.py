@@ -209,6 +209,28 @@ def heart(cx: float, cy: float, w: float, h: float) -> str:
     return p.text()
 
 
+def cloud_outline(cx: float, cy: float, w: float, h: float) -> str:
+    """One closed cloud. Three bumps on top and a smooth bottom, with no extra circles."""
+    x0 = cx - w / 2
+    y0 = cy - h / 2
+
+    def X(t: float) -> float:
+        return x0 + w * t
+
+    def Y(t: float) -> float:
+        return y0 + h * t
+
+    p = Path()
+    p.M(X(0.14), Y(0.58))
+    p.C(X(-0.02), Y(0.58), X(0.02), Y(0.22), X(0.24), Y(0.30))
+    p.C(X(0.26), Y(0.06), X(0.48), Y(-0.02), X(0.56), Y(0.24))
+    p.C(X(0.72), Y(0.04), X(1.02), Y(0.20), X(0.90), Y(0.52))
+    p.C(X(1.06), Y(0.78), X(0.72), Y(1.02), X(0.46), Y(0.88))
+    p.C(X(0.20), Y(1.04), X(-0.02), Y(0.86), X(0.14), Y(0.58))
+    p.Z()
+    return p.text()
+
+
 def leaf(cx: float, cy: float, w: float, h: float) -> str:
     p = Path()
     p.M(cx, cy - h / 2)

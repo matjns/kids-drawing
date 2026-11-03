@@ -62,20 +62,23 @@ def banana() -> dict:
         ["banana", "bananas"],
         [
             step(
-                "Draw the outer curve of the banana, from the stem down to the tip.",
-                ink(curve(70, 48, 36, 120, 78, 168)),
+                "Draw the outer curve, from the stem down to the tip.",
+                ink(curve(96, 42, 46, 90, 78, 168)),
             ),
             step(
-                "Draw the inner curve and close the tip and the stem.",
-                ink(curve(86, 56, 58, 116, 92, 158)),
-                ink(ln(70, 48, 86, 56), width=W),
-                ink(ln(78, 168, 92, 158), width=W),
+                "Draw the inner curve and close both ends so the banana is one shape.",
+                ink(curve(112, 52, 78, 100, 96, 156)),
+                ink(ln(96, 42, 112, 52), width=W),
+                ink(ln(78, 168, 96, 156), width=W),
             ),
             step(
-                "Add a little stem and two short lines on the peel.",
-                ink(pg([(78, 46), (96, 34), (90, 52)], close=True)),
-                ink(curve(74, 80, 70, 100, 80, 120), width=THIN),
-                ink(curve(80, 96, 76, 116, 86, 136), width=THIN),
+                "Add a small stem at the top.",
+                ink(pg([(100, 40), (112, 26), (108, 46)], close=True)),
+            ),
+            step(
+                "Draw two short lines along the peel.",
+                ink(curve(90, 78, 82, 110, 86, 140), width=THIN),
+                ink(curve(98, 90, 90, 120, 94, 148), width=THIN),
             ),
         ],
     )
@@ -93,8 +96,8 @@ def pizza() -> dict:
                 ink(pg([(46, 58), (154, 58), (100, 168)], close=True)),
             ),
             step(
-                "Add the crust as a curved band across the top.",
-                ink(arc(100, 86, 62, 36, 180, 360), width=W),
+                "Draw a line across the top for the crust. Keep it inside the triangle.",
+                ink(ln(54, 88, 146, 88), width=W),
             ),
             step(
                 "Draw three pepperoni circles.",
