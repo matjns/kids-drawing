@@ -27,6 +27,9 @@ export MACOSX_DEPLOYMENT_TARGET=14.0
 build_one() {
   local triple="$1"
   local bin_dir
+  # Build first (output to stderr so only the binary path lands on stdout),
+  # then ask for the bin path. --show-bin-path alone does not build.
+  (cd "$ROOT/app" && swift build -c release --triple "$triple" --product DrawWithMe) >&2
   bin_dir="$(cd "$ROOT/app" && swift build -c release --triple "$triple" --product DrawWithMe --show-bin-path | tail -n 1)"
   if [[ ! -x "$bin_dir/DrawWithMe" ]]; then
     echo "Could not find DrawWithMe in $bin_dir" >&2
