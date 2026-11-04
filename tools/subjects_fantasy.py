@@ -1,6 +1,7 @@
 """Dragon, unicorn, crown, and a magic wand."""
 
-from shapes import THIN, W, Path, circ, curve, ell, ink, lines, ln, pg, rr, smile, star, step, subject, smooth
+from shapes import THIN, W, Path, circ, curve, ell, ink, lines, ln, pg, rr, smile, sp, star, step, subject, smooth
+from subjects_animals import dot, horse_body
 
 
 def all_subjects() -> list[dict]:
@@ -14,30 +15,43 @@ def dragon() -> dict:
         "fantasy",
         ["dragon", "dragons", "dragin"],
         [
-            step("Draw an oval body.", ink(ell(122, 132, 38, 22))),
             step(
-                "Add a neck, a head, a snout, and two small horns.",
-                ink(pg([(104, 122), (82, 90), (74, 72), (92, 80), (112, 126)], close=True)),
-                ink(ell(60, 70, 20, 14)),
-                ink(pg([(44, 66), (22, 74), (46, 82)], close=True)),
-                ink(pg([(50, 58), (44, 38), (62, 56)], close=True)),
-                ink(pg([(66, 56), (76, 34), (78, 58)], close=True)),
+                "Draw the head facing left, with a long snout, and two horns curving back.",
+                ink(sp([(56, 44), (44, 36), (28, 38), (14, 46), (10, 56, 1), (24, 60), (44, 62), (56, 58)],
+                       closed=True)),
+                ink(sp([(50, 40), (60, 26), (72, 18, 1)]), width=THIN),
+                ink(sp([(44, 37), (50, 24), (58, 16, 1)]), width=THIN),
             ),
             step(
-                "Draw one curved wing, then a line for the bone.",
-                ink(_dragon_wing()),
-                ink(ln(112, 120, 128, 48), width=THIN),
+                "Draw a long neck down to the body, then a long tail with a pointy end.",
+                ink(sp([(56, 46), (70, 60), (86, 84), (112, 94), (142, 98), (166, 108), (184, 128),
+                        (190, 150, 1)])),
+                ink(sp([(190, 150), (176, 136), (158, 126), (140, 130)])),
+                ink(sp([(52, 62), (60, 84), (74, 110), (92, 126), (112, 132)])),
+                ink(sp([(186, 146), (180, 164, 1), (194, 160, 1), (191, 144)]), width=THIN),
             ),
             step(
-                "Add a curved tail and two legs.",
-                ink(smooth([(156, 128), (180, 116), (188, 136)]), width=W),
-                ink(pg([(108, 150), (100, 176), (118, 176), (120, 152)], close=True)),
-                ink(pg([(132, 150), (130, 178), (148, 178), (144, 150)], close=True)),
+                "Draw a big bat wing on the back. The bottom edge has curvy points.",
+                ink(sp([(100, 92), (108, 60), (128, 24, 1), (150, 28), (176, 34, 1), (166, 52), (170, 70, 1),
+                        (152, 70), (152, 88, 1), (138, 86), (132, 97)])),
+                ink(sp([(128, 26), (142, 50), (152, 70)]), width=2.4),
+                ink(sp([(128, 26), (150, 40), (170, 68)]), width=2.4),
             ),
             step(
-                "Finish with an eye and a small flame in front of the snout.",
-                ink(circ(52, 66, 2.4), width=2, fill=True),
-                ink(pg([(24, 72), (8, 64), (14, 76), (6, 86), (26, 80)], close=True), width=THIN),
+                "Add a front leg and a big strong back leg, both with claws.",
+                ink(sp([(76, 114), (70, 140), (66, 160), (56, 168, 1), (80, 168, 1), (78, 156), (86, 134),
+                        (92, 126)])),
+                ink(sp([(118, 132), (114, 150), (120, 162), (116, 170), (104, 178, 1), (134, 178, 1), (130, 166),
+                        (138, 148), (146, 128)])),
+                lines([(58, 168, 56, 172), (66, 168, 65, 172), (74, 168, 74, 172), (108, 178, 106, 182),
+                       (118, 178, 117, 182), (128, 178, 128, 182)], width=2),
+            ),
+            step(
+                "Finish with an eye, a nostril, and little spikes down the neck and back.",
+                dot(36, 46, 3),
+                dot(15, 50, 1.6),
+                ink(sp([(62, 52), (70, 44, 1), (72, 58), (82, 54, 1), (82, 72), (94, 70, 1), (96, 88)]), width=THIN),
+                ink(sp([(150, 100), (160, 92, 1), (164, 104), (176, 100, 1), (176, 116)]), width=THIN),
             ),
         ],
     )
@@ -49,28 +63,14 @@ def unicorn() -> dict:
         "Unicorn",
         "fantasy",
         ["unicorn", "unicorns", "unicron"],
-        [
-            step("Draw a long oval for the body.", ink(ell(104, 124, 42, 22))),
+        horse_body()
+        + [
             step(
-                "Add four straight legs and a short hoof on each one.",
-                lines([(76, 142, 72, 176), (96, 144, 94, 178), (122, 144, 126, 178), (140, 140, 148, 174)]),
-                lines([(66, 176, 80, 176), (86, 178, 102, 178), (118, 178, 136, 178), (140, 174, 156, 174)], width=THIN),
-            ),
-            step(
-                "Draw a neck, an oval head, and one ear.",
-                ink(pg([(126, 110), (150, 76), (164, 66), (156, 88), (136, 122)], close=True)),
-                ink(ell(178, 66, 18, 12)),
-                ink(pg([(166, 60), (158, 38), (176, 56)], close=True)),
-            ),
-            step(
-                "Add a horn, a short mane, and a tail.",
-                ink(pg([(172, 56), (180, 24), (190, 56)], close=True)),
-                lines([(148, 74, 138, 58), (142, 88, 130, 74), (136, 102, 122, 90)], width=THIN),
-                ink(smooth([(64, 112), (40, 104), (28, 128), (42, 150)]), width=W),
-            ),
-            step(
-                "Draw an eye.",
-                ink(circ(184, 64, 2.4), width=2, fill=True),
+                "Add a long pointy horn on the forehead with a spiral, then an eye and a nostril.",
+                ink(sp([(39, 42), (30, 10, 1), (48, 37)])),
+                lines([(36, 34, 42, 32), (34, 26, 40, 24), (33, 19, 37, 18)], width=2),
+                dot(37, 52, 3),
+                ink(sp([(19, 75), (22, 72), (24, 76)]), width=2.4),
             ),
         ],
     )
@@ -101,15 +101,6 @@ def crown() -> dict:
             ),
         ],
     )
-
-
-def _dragon_wing() -> str:
-    p = Path()
-    p.M(112, 124)
-    p.C(78, 78, 96, 32, 148, 50)
-    p.C(146, 86, 132, 116, 116, 134)
-    p.Z()
-    return p.text()
 
 
 def wand() -> dict:

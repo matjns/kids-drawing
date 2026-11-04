@@ -319,3 +319,120 @@ def window(x: float, y: float, s: float) -> list[dict]:
 
 def lines(pairs: list[tuple[float, float, float, float]], width: float = THIN) -> list[dict]:
     return [ink(ln(a, b, c, d), width=width) for a, b, c, d in pairs]
+
+
+def sp(points: list, closed: bool = False, tension: float = 1.0) -> str:
+    """Smooth pen line through points (Catmull-Rom turned into cubics).
+
+    A point may be (x, y) or (x, y, 1). The extra 1 marks a sharp corner, like an
+    ear tip or a fin point, so the line turns there instead of rounding off.
+    closed=True joins the last point back to the first with a curve.
+    """
+    pts = [(float(p[0]), float(p[1]), bool(p[2]) if len(p) > 2 else False) for p in points]
+    n = len(pts)
+    if n < 2:
+        return ""
+    k = tension / 6.0
+    path = Path()
+    path.M(pts[0][0], pts[0][1])
+    segs = n if closed else n - 1
+    for i in range(segs):
+        p1 = pts[i]
+        p2 = pts[(i + 1) % n]
+        if closed:
+            p0 = pts[(i - 1) % n]
+            p3 = pts[(i + 2) % n]
+        else:
+            p0 = pts[i - 1] if i > 0 else p1
+            p3 = pts[i + 2] if i + 2 < n else p2
+        if p1[2]:
+            p0 = p1
+        if p2[2]:
+            p3 = p2
+        c1 = (p1[0] + (p2[0] - p0[0]) * k, p1[1] + (p2[1] - p0[1]) * k)
+        c2 = (p2[0] - (p3[0] - p1[0]) * k, p2[1] - (p3[1] - p1[1]) * k)
+        path.C(c1[0], c1[1], c2[0], c2[1], p2[0], p2[1])
+    if closed:
+        path.Z()
+    return path.text()
+
+
+def _cr_sample(points: list, per: int = 6) -> list[tuple[float, float]]:
+    pts = [(float(p[0]), float(p[1])) for p in points]
+    out: list[tuple[float, float]] = []
+    n = len(pts)
+    for i in range(n - 1):
+        p0 = pts[i - 1] if i > 0 else pts[i]
+        p1, p2 = pts[i], pts[i + 1]
+        p3 = pts[i + 2] if i + 2 < n else pts[i + 1]
+        for s in range(per):
+            t = s / per
+            t2, t3 = t * t, t * t * t
+            x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3)
+            y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3)
+            out.append((x, y))
+    out.append(pts[-1])
+    return out
+
+
+def tube(center: list, w0: float, w1: float, closed_start: bool = True, keep: int = 9) -> str:
+    """Outline of a bendy tube (a tail, a trunk, a tentacle) that gets thinner from w0 to w1."""
+    c = _cr_sample(center, per=8)
+    n = len(c)
+    left: list[tuple[float, float]] = []
+    right: list[tuple[float, float]] = []
+    for i, (x, y) in enumerate(c):
+        a = c[max(0, i - 1)]
+        b = c[min(n - 1, i + 1)]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        length = math.hypot(dx, dy) or 1.0
+        nx, ny = -dy / length, dx / length
+        w = (w0 + (w1 - w0) * i / (n - 1)) / 2
+        left.append((x + nx * w, y + ny * w))
+        right.append((x - nx * w, y - ny * w))
+    idx = sorted({round(i * (n - 1) / (keep - 1)) for i in range(keep)})
+    left = [left[i] for i in idx]
+    right = [right[i] for i in idx]
+    if w1 < 0.8:
+        tip = [(c[-1][0], c[-1][1], 1)]
+        left, right = left[:-1], right[:-1]
+    else:
+        tip = []
+    ring = left + tip + right[::-1]
+    if closed_start:
+        return sp(ring, closed=True)
+    return sp(ring)
+
+
+def scallop(cx: float, cy: float, rx: float, ry: float, n: int = 12, puff: float = 0.1, a0: float = 0.0) -> str:
+    """A fluffy edge (wool, a mane, a bush): bumps around an oval."""
+    pts = []
+    for i in range(n * 2):
+        ang = math.radians(a0 + i * 180.0 / n)
+        if i % 2 == 0:
+            pts.append((cx + rx * math.cos(ang), cy + ry * math.sin(ang), 1))
+        else:
+            k = 1 + puff
+            pts.append((cx + rx * k * math.cos(ang), cy + ry * k * math.sin(ang)))
+    return sp(pts, closed=True)
+
+
+def mirror(points: list, axis: float = 100.0) -> list:
+    return [((2 * axis - p[0]), p[1], *p[2:]) for p in points]
+
+
+def tube_bands(center: list, w0: float, w1: float, fractions: list[float], inset: float = 0.85) -> list[str]:
+    """Straight lines across a tube() at the given fractions along it (stripes, rings)."""
+    c = _cr_sample(center, per=8)
+    n = len(c)
+    out: list[str] = []
+    for f in fractions:
+        i = max(1, min(n - 2, round(f * (n - 1))))
+        x, y = c[i]
+        a, b = c[i - 1], c[i + 1]
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        length = math.hypot(dx, dy) or 1.0
+        nx, ny = -dy / length, dx / length
+        w = (w0 + (w1 - w0) * i / (n - 1)) / 2 * inset
+        out.append(Path().M(x + nx * w, y + ny * w).L(x - nx * w, y - ny * w).text())
+    return out

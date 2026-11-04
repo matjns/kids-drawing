@@ -1,6 +1,7 @@
 """Vehicles, drawn from the side so the wheels and windows are easy to copy."""
 
 from shapes import THIN, W, circ, curve, ell, ink, lines, ln, pg, rr, step, subject, wheel
+from shapes import arc, mirror, scallop, sp, tube
 
 
 def all_subjects() -> list[dict]:
@@ -15,23 +16,34 @@ def car() -> dict:
         ["car", "cars", "auto", "automobile", "kar"],
         [
             step(
-                "Draw the body: a long rounded rectangle.",
-                ink(rr(28, 108, 146, 40, 16)),
+                "Draw the side of the car: a low trunk, a curved roof, and a long hood. Leave round bumps for the wheels.",
+                ink(sp([(18, 132, 1), (16, 112), (22, 100), (56, 96), (74, 72), (92, 62), (130, 62), (152, 90),
+                        (180, 98), (188, 112), (188, 132, 1), (166, 132, 1), (162, 118), (146, 110), (130, 118),
+                        (126, 132, 1), (74, 132, 1), (70, 118), (54, 110), (38, 118), (34, 132, 1)], closed=True)),
             ),
             step(
-                "Add the cabin. A trapezoid with a flat top sits on the body.",
-                ink(pg([(70, 108), (84, 70), (132, 70), (150, 108)], close=True)),
+                "Draw two wheels in the bumps, each with a small circle in the middle.",
+                ink(circ(54, 134, 17)),
+                ink(circ(54, 134, 7), width=THIN),
+                ink(circ(146, 134, 17)),
+                ink(circ(146, 134, 7), width=THIN),
             ),
             step(
-                "Draw two wheels with smaller circles in the middle.",
-                wheel(62, 152, 18),
-                wheel(138, 152, 18),
+                "Add two side windows under the roof.",
+                ink(sp([(78, 94, 1), (92, 70, 1), (108, 70, 1), (108, 94, 1)], closed=True), width=THIN),
+                ink(sp([(114, 94, 1), (114, 70, 1), (128, 70), (144, 92, 1)], closed=True), width=THIN),
             ),
             step(
-                "Add a window line, a door line, and a headlight.",
-                ink(ln(100, 74, 100, 108), width=THIN),
-                ink(ln(108, 116, 108, 144), width=THIN),
-                ink(circ(160, 124, 6), width=THIN),
+                "Draw the door lines, door handles, a headlight, and a taillight.",
+                ink(ln(111, 96, 112, 124), width=THIN),
+                ink(ln(76, 96, 76, 124), width=THIN),
+                lines([(92, 102, 100, 102), (126, 102, 134, 102)], width=2.6),
+                ink(ell(180, 106, 5, 4), width=THIN),
+                ink(sp([(18, 104, 1), (26, 104, 1), (26, 112, 1), (17, 112, 1)]), width=THIN),
+            ),
+            step(
+                "Finish with a road line under the wheels.",
+                ink(sp([(8, 152), (100, 152), (192, 152)]), width=THIN),
             ),
         ],
     )
@@ -129,22 +141,30 @@ def airplane() -> dict:
         "vehicles",
         ["airplane", "airplanes", "plane", "planes", "jet", "aeroplane", "airplaine"],
         [
-            step("Draw the body: a long rounded rectangle.", ink(rr(36, 90, 128, 26, 12))),
             step(
-                "Add a triangle wing under the body, and a small tail wing.",
-                ink(pg([(72, 112), (148, 112), (166, 158)], close=True)),
-                ink(pg([(146, 112), (178, 132), (164, 112)], close=True)),
+                "Draw a long tube for the body with a round nose on the right. It gets thinner and turns up at the tail.",
+                ink(sp([(186, 102), (178, 92), (150, 88), (60, 88), (26, 76, 1), (20, 86, 1), (50, 106), (150, 112),
+                        (178, 110)], closed=True)),
             ),
             step(
-                "Draw the tail fin on top of the body.",
-                ink(pg([(146, 90), (176, 50), (176, 90)], close=True)),
+                "Draw the big wing sweeping back under the body, and the far wing peeking over the top.",
+                ink(sp([(118, 106), (96, 132), (70, 156, 1), (56, 156, 1), (80, 108)])),
+                ink(sp([(110, 88), (92, 66, 1), (80, 66, 1), (88, 88)])),
             ),
             step(
-                "Add windows and a nose circle.",
-                ink(circ(48, 100, 4), width=THIN),
-                ink(circ(64, 100, 4), width=THIN),
-                ink(circ(80, 100, 4), width=THIN),
-                ink(circ(96, 100, 4), width=THIN),
+                "Add a tall fin on the tail and a small flat wing beside it.",
+                ink(sp([(54, 88), (34, 46, 1), (20, 46, 1), (28, 78)])),
+                ink(sp([(44, 98), (14, 108, 1), (24, 110, 1), (54, 102)])),
+            ),
+            step(
+                "Hang a round engine under the wing.",
+                ink(sp([(84, 118), (106, 116), (112, 124), (106, 132), (84, 132), (80, 125)], closed=True)),
+                ink(ell(84, 125, 4, 7), width=THIN),
+            ),
+            step(
+                "Finish with the cockpit window at the front and a row of little windows.",
+                ink(sp([(170, 94), (180, 96), (182, 100), (172, 100)], closed=True), width=2.4),
+                [ink(circ(x, 97, 2.6), width=2, fill=True) for x in range(62, 160, 12)],
             ),
         ],
     )
@@ -185,32 +205,36 @@ def bicycle() -> dict:
         ["bicycle", "bike", "bikes", "cycle"],
         [
             step(
-                "Draw two wheels.",
-                wheel(58, 132, 30),
-                wheel(148, 132, 30),
+                "Draw two big wheels side by side, each with a tiny circle in the middle.",
+                ink(circ(50, 130, 32)),
+                ink(circ(150, 130, 32)),
+                ink(circ(50, 130, 4), width=THIN),
+                ink(circ(150, 130, 4), width=THIN),
             ),
             step(
-                "Connect the wheels with a triangle frame.",
-                lines(
-                    [
-                        (58, 132, 104, 132),
-                        (58, 132, 100, 78),
-                        (104, 132, 100, 78),
-                        (104, 132, 148, 132),
-                    ]
-                ),
+                "Draw the frame: two triangles that share the line under the seat.",
+                ink(pg([(50, 130), (94, 132), (84, 80)], close=True), width=4),
+                ink(pg([(84, 80), (138, 80), (142, 92), (94, 132)], close=True), width=4),
             ),
             step(
-                "Add the seat, handlebars, and the front fork.",
-                ink(ln(86, 78, 114, 78), width=W),
-                ink(ln(100, 78, 100, 70), width=THIN),
-                ink(pg([(148, 132), (132, 62), (156, 58)])),
-                ink(ln(124, 60, 164, 64), width=W),
+                "Add the front fork down to the wheel, and handlebars on top.",
+                ink(ln(142, 92, 150, 130), width=4),
+                ink(ln(138, 80, 134, 64), width=4),
+                ink(sp([(122, 64), (134, 63), (146, 58), (152, 66)]), width=4),
             ),
             step(
-                "Draw the pedal circle in the middle of the frame.",
-                ink(circ(104, 132, 8), width=THIN),
-                ink(ln(96, 132, 112, 132), width=THIN),
+                "Draw the seat on a short post, and the pedals in the middle.",
+                ink(ln(84, 80, 82, 70), width=4),
+                ink(sp([(68, 68), (88, 66), (96, 70), (80, 74)], closed=True), width=THIN),
+                ink(circ(94, 132, 7), width=THIN),
+                ink(ln(94, 132, 104, 148), width=THIN),
+                ink(ln(98, 148, 112, 148), width=4),
+            ),
+            step(
+                "Finish with thin spokes in both wheels.",
+                lines([(50, 100, 50, 160), (20, 130, 80, 130), (29, 109, 71, 151), (29, 151, 71, 109),
+                       (150, 100, 150, 160), (120, 130, 180, 130), (129, 109, 171, 151), (129, 151, 171, 109)],
+                      width=1.6),
             ),
         ],
     )
@@ -223,22 +247,33 @@ def helicopter() -> dict:
         "vehicles",
         ["helicopter", "helicopters", "chopper", "copter"],
         [
-            step("Draw an oval body.", ink(ell(78, 112, 36, 24))),
             step(
-                "Add a long tail and a small tail fin.",
-                ink(rr(108, 104, 62, 10, 5)),
-                ink(pg([(168, 96), (188, 70), (188, 114), (168, 114)], close=True)),
+                "Draw a round cabin, like a big egg lying on its side, with the front on the left.",
+                ink(sp([(40, 110), (46, 86), (70, 72), (110, 70), (130, 80), (136, 104), (126, 124), (80, 128),
+                        (50, 124)], closed=True)),
             ),
             step(
-                "Draw the rotor, a long thin oval, and a short mast down to the body.",
-                ink(ell(78, 56, 68, 7)),
-                ink(ln(78, 63, 78, 88), width=W),
+                "Draw a long, thin tail going out to the right, with a small fin at the end.",
+                ink(sp([(134, 86), (160, 87), (184, 88)])),
+                ink(sp([(132, 106), (160, 100), (184, 96)])),
+                ink(sp([(182, 88), (188, 64, 1), (196, 66, 1), (194, 96, 1), (184, 97)])),
             ),
             step(
-                "Add the skids, a tail rotor, and a window.",
-                lines([(52, 134, 40, 156), (104, 134, 116, 156), (36, 156, 122, 156)]),
-                ink(circ(176, 108, 6), width=THIN),
-                ink(ell(70, 108, 12, 8), width=THIN),
+                "Draw a big window at the front and a door line.",
+                ink(sp([(46, 104), (52, 86), (70, 78), (90, 78), (90, 104)], closed=True), width=THIN),
+                ink(sp([(100, 76), (100, 120)]), width=THIN),
+            ),
+            step(
+                "Add a short post on top and long, thin spinning blades.",
+                ink(rr(86, 58, 10, 13, 2), width=THIN),
+                ink(sp([(14, 54, 1), (90, 51), (174, 54, 1), (90, 58)], closed=True), width=THIN),
+                ink(sp([(184, 76), (194, 84)]), width=THIN),
+                ink(sp([(194, 72), (184, 88)]), width=THIN),
+            ),
+            step(
+                "Finish with two legs and a long skid to land on.",
+                lines([(68, 127, 62, 146), (112, 126, 118, 146)], width=THIN),
+                ink(sp([(28, 140), (36, 148), (150, 148), (158, 142)])),
             ),
         ],
     )

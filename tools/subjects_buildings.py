@@ -1,10 +1,19 @@
 """Buildings and a bridge."""
 
 from shapes import THIN, W, arc, circ, curve, ell, ink, lines, ln, pg, rr, step, subject
+from shapes import arc, mirror, scallop, sp, tube
 
 
 def all_subjects() -> list[dict]:
     return [house(), castle(), school(), barn(), lighthouse(), bridge()]
+
+
+def _cable_y(x: float) -> float:
+    if x <= 60:
+        return 116 - 74 * ((x - 8) / 52) ** 2
+    if x >= 140:
+        return 116 - 74 * ((192 - x) / 52) ** 2
+    return 110 - 68 * ((x - 100) / 40) ** 2
 
 
 def house() -> dict:
@@ -188,28 +197,38 @@ def lighthouse() -> dict:
 
 
 def bridge() -> dict:
+    xs = [8, 20, 34, 48, 60, 72, 86, 100, 114, 128, 140, 152, 166, 180, 192]
+    cable = [(x, _cable_y(x), 1) if x in (60, 140) else (x, _cable_y(x)) for x in xs]
+    hangers = [x for x in (24, 40, 76, 88, 100, 112, 124, 160, 176)]
     return subject(
         "bridge",
         "Bridge",
         "buildings",
         ["bridge", "bridges"],
         [
-            step("Draw the deck, a long flat shape.", ink(rr(16, 112, 168, 14, 3))),
             step(
-                "Add two towers.",
-                ink(rr(48, 48, 16, 78, 2)),
-                ink(rr(136, 48, 16, 78, 2)),
+                "Draw the road of the bridge: two long lines across the page.",
+                ink(ln(6, 128, 194, 128)),
+                ink(ln(6, 138, 194, 138)),
             ),
             step(
-                "Hang two curved cables.",
-                ink(arc(100, 40, 70, 78, 35, 145), width=THIN),
-                ink(arc(100, 48, 58, 64, 40, 140), width=THIN),
+                "Draw two tall towers, each with two cross bars.",
+                ink(sp([(52, 150, 1), (55, 40, 1), (65, 40, 1), (68, 150, 1)])),
+                ink(sp([(132, 150, 1), (135, 40, 1), (145, 40, 1), (148, 150, 1)])),
+                lines([(54, 60, 66, 60), (53, 96, 67, 96), (134, 60, 146, 60), (133, 96, 147, 96)], width=THIN),
             ),
             step(
-                "Draw water underneath.",
-                ink(curve(16, 156, 50, 146, 84, 156), width=THIN),
-                ink(curve(84, 162, 120, 150, 156, 160), width=THIN),
-                ink(curve(24, 176, 70, 166, 120, 176), width=THIN),
+                "Draw the big cable: it swoops down between the towers like a smile.",
+                ink(sp(cable), width=THIN),
+            ),
+            step(
+                "Add thin straight lines from the cable down to the road.",
+                [ink(ln(x, _cable_y(x), x, 128), width=1.8) for x in hangers],
+            ),
+            step(
+                "Finish with wavy water under the bridge.",
+                ink(sp([(10, 162), (30, 158), (50, 162), (70, 158), (90, 162)]), width=THIN),
+                ink(sp([(100, 172), (120, 168), (140, 172), (160, 168), (180, 172)]), width=THIN),
             ),
         ],
     )

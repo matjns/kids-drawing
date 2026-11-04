@@ -19,6 +19,7 @@ from shapes import (
     step,
     subject,
 )
+from shapes import arc, mirror, scallop, sp, tube
 
 
 def all_subjects() -> list[dict]:
@@ -40,25 +41,49 @@ def all_subjects() -> list[dict]:
     ]
 
 
+def _ball_parts() -> tuple[list, list, list]:
+    import math
+
+    def at(r: float, deg: float) -> tuple[float, float]:
+        a = math.radians(deg - 90)
+        return (100 + r * math.cos(a), 100 + r * math.sin(a))
+
+    pent = [at(20, i * 72) for i in range(5)]
+    seams = []
+    for i in range(5):
+        a = i * 72
+        seams.append((*at(20, a), *at(36, a)))
+        seams.append((*at(36, a), *at(46, a + 24)))
+        seams.append((*at(36, a), *at(46, a - 24)))
+        seams.append((*at(46, a + 24), *at(60, a + 30)))
+        seams.append((*at(46, a - 24), *at(60, a - 30)))
+    edge = []
+    for i in range(5):
+        a = i * 72 + 36
+        edge.append([at(48, a - 12), at(48, a + 12), at(59, a + 16), at(59, a - 16)])
+    return pent, seams, edge
+
+
 def ball() -> dict:
+    pent, seams, edge = _ball_parts()
     return subject(
         "ball",
         "Ball",
         "everyday",
         ["ball", "beach ball", "beachball", "soccer ball", "football"],
         [
-            step("Draw a big circle.", ink(circ(100, 100, 70))),
+            step("Draw a big circle.", ink(circ(100, 100, 60))),
             step(
-                "Draw a line across the middle and a line from top to bottom.",
-                ink(ln(30, 100, 170, 100), width=THIN),
-                ink(ln(100, 30, 100, 170), width=THIN),
+                "Draw a five-sided shape in the middle and color it in.",
+                ink(pg(pent, close=True), width=2, fill=True),
             ),
             step(
-                "Add four curved panel lines that meet in the middle.",
-                ink(curve(100, 32, 60, 60, 32, 100), width=THIN),
-                ink(curve(100, 32, 140, 60, 168, 100), width=THIN),
-                ink(curve(100, 168, 60, 140, 32, 100), width=THIN),
-                ink(curve(100, 168, 140, 140, 168, 100), width=THIN),
+                "Draw lines from each corner out toward the edge, splitting into a Y.",
+                lines(seams, width=2.4),
+            ),
+            step(
+                "Color in the patches near the edge, between the Y lines.",
+                [ink(pg(p, close=True), width=2, fill=True) for p in edge],
             ),
         ],
     )
@@ -108,19 +133,23 @@ def cup() -> dict:
         "everyday",
         ["cup", "cups", "mug", "mugs"],
         [
+            step("Draw a wide oval for the top of the mug.", ink(ell(90, 62, 40, 10))),
             step(
-                "Draw the cup. A rounded rectangle open at the top is fine, then an oval rim.",
-                ink(pg([(58, 70), (142, 70), (132, 150), (68, 150)], close=True)),
-                ink(ell(100, 70, 42, 12)),
+                "Draw the sides going down and a round bottom.",
+                ink(sp([(50, 62), (52, 110), (54, 150)])),
+                ink(sp([(130, 62), (128, 110), (126, 150)])),
+                ink(sp([(54, 150), (90, 162), (126, 150)])),
             ),
             step(
-                "Add a handle on the right.",
-                ink(arc(148, 108, 22, 28, 280, 80), width=W),
+                "Add a big curved handle on the right.",
+                ink(sp([(130, 80), (156, 78), (166, 104), (152, 130), (127, 134)])),
+                ink(sp([(129, 92), (148, 92), (152, 106), (144, 120), (127, 122)])),
             ),
             step(
-                "Draw two curls of steam.",
-                ink(curve(80, 52, 70, 36, 84, 22), width=THIN),
-                ink(curve(112, 48, 124, 30, 108, 16), width=THIN),
+                "Finish with a line for the drink inside, and wavy steam on top.",
+                ink(sp([(56, 64), (90, 70), (124, 64)]), width=2),
+                ink(sp([(78, 44), (72, 34), (80, 24), (74, 14)]), width=THIN),
+                ink(sp([(100, 44), (94, 34), (102, 24), (96, 14)]), width=THIN),
             ),
         ],
     )
@@ -180,22 +209,37 @@ def hat() -> dict:
 
 
 def umbrella() -> dict:
+    ribs = [24, 62, 100, 138, 176]
+    edge = []
+    for i, x in enumerate(ribs):
+        edge.append((x, 100, 1))
+        if i < len(ribs) - 1:
+            edge.append(((x + ribs[i + 1]) / 2, 90))
     return subject(
         "umbrella",
         "Umbrella",
         "everyday",
         ["umbrella", "umbrellas", "brolly"],
         [
-            step("Draw the canopy, a big arch.", ink(arc(100, 120, 70, 62, 180, 360), width=W)),
-            step("Close the canopy with a straight line.", ink(ln(30, 120, 170, 120), width=W)),
             step(
-                "Add three ribs from the middle of the canopy down to the edge.",
-                lines([(100, 58, 100, 120), (60, 86, 100, 120), (140, 86, 100, 120)], width=THIN),
+                "Draw a big dome for the top of the umbrella.",
+                ink(sp([(24, 100, 1), (38, 62), (100, 30), (162, 62), (176, 100, 1)])),
             ),
             step(
-                "Draw the shaft and a J-shaped handle.",
-                ink(ln(100, 120, 100, 168), width=W),
-                ink(arc(86, 168, 14, 14, 0, 180), width=W),
+                "Draw the bottom edge as four curved bumps.",
+                ink(sp(edge)),
+            ),
+            step(
+                "Draw curved lines from the top down to each point.",
+                ink(sp([(100, 30), (70, 52), (62, 100)]), width=THIN),
+                ink(sp([(100, 30), (130, 52), (138, 100)]), width=THIN),
+                ink(ln(100, 30, 100, 100), width=THIN),
+            ),
+            step(
+                "Finish with a long handle that curls at the bottom like a J, and a tip on top.",
+                ink(ln(100, 100, 100, 160)),
+                ink(sp([(100, 160), (100, 172), (110, 180), (120, 172), (120, 166)])),
+                ink(ln(100, 30, 100, 20)),
             ),
         ],
     )
@@ -367,16 +411,28 @@ def chair() -> dict:
         "everyday",
         ["chair", "chairs", "seat"],
         [
-            step("Draw the seat, a flat rectangle.", ink(rr(48, 96, 104, 18, 3))),
             step(
-                "Add the back: two posts and a top rail.",
-                ink(rr(56, 36, 12, 64, 2)),
-                ink(rr(132, 36, 12, 64, 2)),
-                ink(rr(56, 28, 88, 16, 4)),
+                "Draw the seat as a slanted box shape, like you are looking from the side.",
+                ink(pg([(48, 112), (124, 112), (150, 96), (76, 96)], close=True)),
+                ink(pg([(48, 112), (48, 120), (124, 120), (150, 104), (150, 96)]), width=THIN),
             ),
             step(
-                "Draw four legs.",
-                lines([(58, 114, 46, 176), (78, 114, 74, 176), (122, 114, 126, 176), (142, 114, 156, 176)]),
+                "Draw two tall posts going up from the back of the seat.",
+                ink(ln(78, 96, 78, 26)),
+                ink(ln(148, 96, 148, 26)),
+            ),
+            step(
+                "Add a curved bar across the top and two slats under it.",
+                ink(sp([(74, 28), (113, 20), (152, 28)])),
+                ink(sp([(74, 38), (113, 30), (152, 38)])),
+                lines([(102, 34, 102, 96), (124, 34, 124, 96)], width=THIN),
+            ),
+            step(
+                "Draw four legs. The back legs are a little shorter because they are farther away.",
+                ink(ln(50, 120, 50, 178)),
+                ink(ln(122, 120, 122, 178)),
+                ink(ln(148, 104, 148, 164)),
+                ink(ln(80, 120, 80, 164), width=THIN),
             ),
         ],
     )

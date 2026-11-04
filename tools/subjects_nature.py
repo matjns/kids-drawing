@@ -1,6 +1,7 @@
 """Nature: trees, weather, and a snowman."""
 
 from shapes import THIN, W, arc, circ, cloud_outline, curve, ell, ink, leaf, lines, ln, pg, rr, smile, step, subject, dot_eyes
+from shapes import arc, mirror, scallop, sp, tube
 
 
 def all_subjects() -> list[dict]:
@@ -18,6 +19,15 @@ def all_subjects() -> list[dict]:
     ]
 
 
+def _petal(angle: float) -> list:
+    import math
+
+    def at(r: float, a: float) -> tuple[float, float]:
+        return (100 + r * math.cos(math.radians(a)), 62 + r * math.sin(math.radians(a)))
+
+    return [at(13, angle - 9), at(30, angle - 10), at(42, angle), at(30, angle + 10), at(13, angle + 9)]
+
+
 def tree() -> dict:
     return subject(
         "tree",
@@ -26,20 +36,24 @@ def tree() -> dict:
         ["tree", "trees"],
         [
             step(
-                "Draw the trunk. A tall trapezoid, wider at the bottom.",
-                ink(pg([(90, 118), (110, 118), (120, 178), (80, 178)], close=True)),
+                "Draw a thick trunk that spreads out into roots at the bottom.",
+                ink(sp([(78, 182, 1), (90, 172), (93, 150), (93, 122)])),
+                ink(sp([(124, 182, 1), (110, 172), (107, 150), (107, 122)])),
             ),
             step(
-                "Add one bumpy shape for the leaves. It sits on the trunk.",
-                ink(cloud_outline(100, 86, 120, 78)),
+                "Draw a big, bumpy cloud of leaves on top of the trunk.",
+                ink(scallop(100, 72, 76, 50, n=10, puff=0.13)),
             ),
             step(
-                "Draw a small knot on the trunk.",
-                ink(ell(100, 146, 6, 8), width=THIN),
+                "Add branches growing up from the trunk into the leaves.",
+                ink(sp([(94, 124), (82, 110), (66, 98)]), width=THIN),
+                ink(sp([(106, 122), (120, 108), (136, 98)]), width=THIN),
+                ink(sp([(100, 122), (100, 104), (98, 90)]), width=THIN),
             ),
             step(
-                "Add two short grass lines beside the trunk.",
-                lines([(78, 178, 68, 188), (122, 178, 132, 188)], width=THIN),
+                "Finish with bark lines on the trunk and a line for the ground.",
+                lines([(98, 140, 99, 152), (103, 158, 102, 168)], width=2),
+                ink(sp([(40, 182), (100, 184), (160, 182)]), width=THIN),
             ),
         ],
     )
@@ -52,26 +66,24 @@ def flower() -> dict:
         "nature",
         ["flower", "flowers", "blossom"],
         [
-            step("Draw a straight stem.", ink(ln(100, 112, 100, 186), width=W)),
+            step("Draw a circle for the middle of the flower.", ink(circ(100, 62, 13))),
             step(
-                "Add two leaves.",
-                ink(leaf(78, 146, 28, 18)),
-                ink(leaf(124, 162, 26, 16)),
-            ),
-            step("Draw a circle in the middle of the flower.", ink(circ(100, 78, 14))),
-            step(
-                "Add six oval petals around the center.",
-                ink(ell(100, 42, 12, 18)),
-                ink(ell(100, 114, 12, 18)),
-                ink(ell(64, 60, 18, 12)),
-                ink(ell(136, 60, 18, 12)),
-                ink(ell(64, 98, 18, 12)),
-                ink(ell(136, 98, 18, 12)),
+                "Draw long, thin petals all the way around, like the spokes of a wheel.",
+                [ink(sp(_petal(a)), width=THIN) for a in range(0, 360, 30)],
             ),
             step(
-                "Give the center a face.",
-                dot_eyes(100, 76, gap=8, r=1.8),
-                smile(100, 84, 10, 4),
+                "Draw a long stem that bends a little on the way down.",
+                ink(sp([(100, 104), (104, 134), (98, 186)])),
+            ),
+            step(
+                "Add two pointy leaves on the stem.",
+                ink(sp([(102, 150), (80, 136), (58, 136, 1), (76, 150), (100, 158)], closed=True), width=THIN),
+                ink(sp([(103, 128), (124, 114), (146, 112, 1), (130, 126), (104, 136)], closed=True), width=THIN),
+            ),
+            step(
+                "Finish with little dots in the middle.",
+                [ink(circ(100 + x, 62 + y, 1.8), width=1.4, fill=True) for x, y in
+                 [(-5, -4), (4, -5), (6, 3), (-3, 5), (0, 0)]],
             ),
         ],
     )
@@ -218,17 +230,26 @@ def mushroom() -> dict:
         "nature",
         ["mushroom", "mushrooms", "toadstool"],
         [
-            step("Draw the cap. A wide oval is the top.", ink(ell(100, 86, 62, 28))),
             step(
-                "Close the cap with a curved line underneath.",
-                ink(arc(100, 96, 58, 16, 15, 165), width=W),
+                "Draw a round cap like a dome, with a gently curved bottom edge.",
+                ink(sp([(24, 100, 1), (34, 62), (68, 36), (100, 30), (132, 36), (166, 62), (176, 100, 1), (150, 108),
+                        (100, 112), (50, 108)], closed=True)),
             ),
-            step("Draw the stem.", ink(rr(82, 100, 36, 72, 10))),
             step(
-                "Add spots on the cap.",
-                ink(circ(70, 78, 8), width=THIN),
-                ink(circ(100, 70, 7), width=THIN),
-                ink(circ(128, 82, 8), width=THIN),
+                "Draw a thick stem that gets a little wider at the bottom.",
+                ink(sp([(80, 110), (78, 140), (72, 170), (86, 178), (114, 178), (128, 170), (122, 140), (120, 110)])),
+            ),
+            step(
+                "Add thin lines under the cap for the gills.",
+                lines([(56, 106, 80, 112), (144, 106, 120, 112), (68, 109, 84, 112), (132, 109, 116, 112)], width=1.8),
+            ),
+            step(
+                "Finish with round spots on the cap and a few blades of grass.",
+                ink(circ(70, 62, 9), width=THIN),
+                ink(circ(104, 48, 10), width=THIN),
+                ink(circ(138, 66, 8), width=THIN),
+                ink(circ(96, 84, 6), width=THIN),
+                lines([(60, 180, 56, 166), (64, 180, 66, 168), (138, 180, 136, 168), (142, 180, 146, 166)], width=2.4),
             ),
         ],
     )

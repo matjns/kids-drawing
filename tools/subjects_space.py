@@ -1,6 +1,7 @@
 """Space drawings: rocket, planets, and a friendly astronaut."""
 
 from shapes import THIN, W, circ, curve, ell, flame, ink, lines, ln, pg, rr, smile, star, step, subject, dot_eyes
+from shapes import arc, mirror, scallop, sp, tube
 
 
 def all_subjects() -> list[dict]:
@@ -147,31 +148,46 @@ def alien() -> dict:
 
 
 def astronaut() -> dict:
+    arm = [(72, 86), (58, 104), (54, 124)]
+    leg_l = [(80, 134), (78, 166), (96, 166, 1), (98, 136)]
+    boot_l = [(74, 166, 1), (98, 166, 1), (100, 180, 1), (68, 180, 1)]
     return subject(
         "astronaut",
         "Astronaut",
         "space",
         ["astronaut", "astronauts", "spaceman"],
         [
-            step("Draw a circle helmet.", ink(circ(100, 62, 32))),
-            step("Add the suit body, a rounded rectangle.", ink(rr(68, 96, 64, 58, 12))),
             step(
-                "Draw the visor inside the helmet.",
-                ink(rr(80, 48, 40, 28, 12), width=THIN),
+                "Draw a big round helmet with a wide window in the front.",
+                ink(circ(100, 46, 26)),
+                ink(sp([(80, 42), (90, 32), (110, 32), (120, 42), (116, 56), (100, 60), (84, 56)], closed=True), width=THIN),
             ),
             step(
-                "Add a backpack, arms, and legs.",
-                ink(rr(128, 104, 22, 40, 4)),
-                ink(curve(68, 112, 42, 124, 36, 108), width=W),
-                ink(curve(132, 112, 156, 120, 162, 104), width=W),
-                ink(rr(74, 152, 18, 32, 6)),
-                ink(rr(108, 152, 18, 32, 6)),
+                "Draw a puffy suit body under the helmet.",
+                ink(sp([(76, 74), (124, 74), (132, 92), (128, 128), (122, 136), (78, 136), (72, 128), (68, 92)],
+                       closed=True)),
             ),
             step(
-                "Draw a round badge on the chest and two boots.",
-                ink(circ(100, 124, 8), width=THIN),
-                ink(ell(80, 186, 14, 6)),
-                ink(ell(120, 186, 14, 6)),
+                "Add two puffy arms with round gloves.",
+                ink(tube(arm, 17, 15, closed_start=False, keep=6)),
+                ink(tube(mirror(arm), 17, 15, closed_start=False, keep=6)),
+                ink(circ(54, 132, 8)),
+                ink(circ(146, 132, 8)),
+            ),
+            step(
+                "Draw two legs with big boots.",
+                ink(sp(leg_l)),
+                ink(sp(mirror(leg_l))),
+                ink(sp(boot_l, closed=True)),
+                ink(sp(mirror(boot_l), closed=True)),
+            ),
+            step(
+                "Finish with a control box on the chest and a shine on the helmet window.",
+                ink(rr(88, 92, 24, 16, 3), width=THIN),
+                ink(circ(95, 100, 2), width=1.4, fill=True),
+                ink(circ(105, 100, 2), width=1.4, fill=True),
+                ink(sp([(88, 40), (94, 36), (100, 36)]), width=2),
+                ink(ln(76, 124, 124, 124), width=2),
             ),
         ],
     )

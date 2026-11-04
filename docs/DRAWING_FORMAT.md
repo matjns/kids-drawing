@@ -9,6 +9,20 @@ python3 tools/generate_drawings.py
 python3 tools/render_previews.py
 ```
 
+The pictures are meant to look like real pen-and-ink sketches, not stacks of circles and boxes. `tools/shapes.py` has helpers for that:
+
+- `sp(points)` draws a smooth curve through a list of points. Add a third value, as in `(x, y, 1)`, for a sharp corner.
+- `tube(center, w0, w1)` turns a center line into a tapering outline, for tails, trunks, necks, and arms.
+- `scallop(...)` draws a bumpy, fluffy edge for clouds, sheep wool, and tree leaves.
+- `mirror(points)` flips points across the middle of the page.
+
+Keep each subject to about 5 to 10 steps a child can copy, and make each step's words describe exactly the lines it adds. To look at a few subjects while you work:
+
+```bash
+python3 tools/review.py --out=review.png whale cat
+python3 tools/review.py --out=steps.png --steps whale
+```
+
 You can also edit the JSON by hand. Keep it valid. The next app build copies the file into the app.
 
 ## File shape
