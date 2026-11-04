@@ -1,0 +1,55 @@
+name: macOS
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Swift
+        run: swift --version
+      - name: Test
+        run: ./build.sh test
+      - name: Build universal app
+        run: ./build.sh
+      - name: Upload app zip
+        uses: actions/upload-artifact@v4
+        with:
+          name: Draw-With-Me-mac-universal
+          path: dist/Draw With Me-mac-universal.zip
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    needs: test-and-build
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build universal app
+        run: ./build.sh
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          else
+            TAG="manual-${GITHUB_SHA::7}"
+          fi
+          NOTES="Unsigned universal Mac app (Apple silicon and Intel). Open README-mac.txt inside the zip if Gatekeeper will not launch the app."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "dist/Draw With Me-mac-universal.zip" --clobber
+          else
+            gh release create "$TAG" "dist/Draw With Me-mac-universal.zip" \
+              --title "Draw With Me ${TAG}" \
+              --notes "$NOTES"
+          fi
