@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Progress: Codable, Equatable, Sendable {
+public struct DrawingProgress: Codable, Equatable, Sendable {
     public var finishedIDs: [String]
     public var animateSteps: Bool
 
@@ -27,13 +27,13 @@ public struct FileProgressStore: Sendable {
         self.fileURL = directory.appendingPathComponent("progress.json")
     }
 
-    public func load() -> Progress {
-        guard let data = try? Data(contentsOf: fileURL) else { return Progress() }
-        guard let progress = try? JSONDecoder().decode(Progress.self, from: data) else { return Progress() }
+    public func load() -> DrawingProgress {
+        guard let data = try? Data(contentsOf: fileURL) else { return DrawingProgress() }
+        guard let progress = try? JSONDecoder().decode(DrawingProgress.self, from: data) else { return DrawingProgress() }
         return progress
     }
 
-    public func save(_ progress: Progress) throws {
+    public func save(_ progress: DrawingProgress) throws {
         let directory = fileURL.deletingLastPathComponent()
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let data = try JSONEncoder().encode(progress)

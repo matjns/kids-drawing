@@ -24,7 +24,7 @@ final class AppModel: ObservableObject {
     @Published var lesson: LessonSession?
     @Published var notice: Notice?
     @Published var cheer: String?
-    @Published private(set) var progress: Progress
+    @Published private(set) var progress: DrawingProgress
     @Published var replayToken = 0
     @Published var focusSearch = false
     @Published var saveWarning: String?

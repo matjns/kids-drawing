@@ -280,8 +280,8 @@ final class ProgressStoreTests: XCTestCase {
         let directory = FileManager.default.temporaryDirectory
             .appendingPathComponent("draw-with-me-tests-\(UUID().uuidString)", isDirectory: true)
         let store = FileProgressStore(directory: directory)
-        XCTAssertEqual(store.load(), Progress())
-        var progress = Progress()
+        XCTAssertEqual(store.load(), DrawingProgress())
+        var progress = DrawingProgress()
         progress.markFinished("cat")
         progress.markFinished("cat")
         progress.markFinished("rocket")
@@ -291,7 +291,7 @@ final class ProgressStoreTests: XCTestCase {
         XCTAssertEqual(loaded.finishedIDs, ["cat", "rocket"])
         XCTAssertFalse(loaded.animateSteps)
         try Data("nope".utf8).write(to: store.fileURL)
-        XCTAssertEqual(store.load(), Progress())
+        XCTAssertEqual(store.load(), DrawingProgress())
         try? FileManager.default.removeItem(at: directory)
     }
 }
